@@ -24,10 +24,6 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: docker
-  cancel-in-progress: false
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -48,57 +44,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: docker
           build-args: |
             ROSWELL_VERSION=${{ inputs.roswell_version }}
             SBCL_VERSION=${{ inputs.sbcl_version }}
             OCICL_VERSION=${{ inputs.ocicl_version }}
-          tags: djhaskin987/roswell-ocicl:latest
-
-      - name: Install build dependencies
-        run: |
-          set -ex
-          sudo apt-get install -y jq
-          download_url=$(curl -s https://api.github.com/repos/roswell/roswell/releases/latest | \
-            jq -r '.assets |
-                   .[] |
-                   select(.name|test("\\.deb$")) |
-                   .browser_download_url')
-          curl -L "${download_url}" --output roswell.deb
-          sudo apt-get install -y ./roswell.deb make
-          ros install sbcl-bin
-          ros use sbcl-bin
-          sbcl_vers=$(ls -1A ~/.roswell/impls/x86-64/linux/sbcl-bin)
-          export PATH=~/.roswell/impls/x86-64/linux/sbcl-bin/${sbcl_vers}/bin:${PATH}
-          cd ocicl
-          mkdir -p ~/.local/bin/
-          sbcl --load setup.lisp
-          chmod a+x ocicl
-          mv ocicl ~/.local/bin
-          cat >> ~/.roswell/init.lisp << ROSWELL
-          #-ocicl
-          (when (probe-file #P"~/.local/share/ocicl/ocicl-runtime.lisp")
-            (load #P"~/.local/share/ocicl/ocicl-runtime.lisp"))
-          (asdf:initialize-source-registry
-            (list :source-registry (list :directory (uiop:getcwd)) :inherit-configuration))
-          ROSWELL
-
-      - name: Make the docs
-        run: |
-          sbcl_vers=$(ls -1A ~/.roswell/impls/x86-64/linux/sbcl-bin)
-          export PATH=~/.roswell/impls/x86-64/linux/sbcl-bin/${sbcl_vers}/bin:~/.local/bin:${PATH}
-          ocicl install
-          make docs
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload docs
-          path: 'docs/build/cliff-command-line-interface-functional-framework/html/'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          tags: djhaskin987/roswell-sbcl-ocicl:latest
