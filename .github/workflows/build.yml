@@ -49,10 +49,10 @@ jobs:
         with:
           push: true
           context: docker
-          build-args:
-            - ROSWELL_VERSION=${{ inputs.roswell_version }}
-            - SBCL_VERSION=${{ inputs.sbcl_version }}
-            - OCICL_VERSION=${{ inputs.ocicl_version }}
+          build-args: |
+            ROSWELL_VERSION=${{ inputs.roswell_version }}
+            SBCL_VERSION=${{ inputs.sbcl_version }}
+            OCICL_VERSION=${{ inputs.ocicl_version }}
           tags: djhaskin987/roswell-ocicl:latest
 
       - name: Install build dependencies

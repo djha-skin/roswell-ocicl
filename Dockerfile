@@ -25,11 +25,11 @@ USER builder
 WORKDIR /home/builder
 
 RUN git clone -b release https://github.com/roswell/roswell.git && \
-    git checkout $ROSWELL_VERSION && \
-    mkdir -p ~/.local && \
     cd roswell && \
+    git checkout $ROSWELL_VERSION && \
+    mkdir -p /home/builder/.local && \
     sh bootstrap && \
-    ./configure --prefix=~/.local && \
+    ./configure --prefix=/home/builder/.local && \
     make && \
     make install && \
     cd ..
@@ -44,9 +44,9 @@ RUN git clone https://github.com/ocicl/ocicl && \
     git checkout $OCICL_VERSION && \
     sbcl --load setup.lisp && \
     chmod a+x ocicl && \
-    mv ocicl ~/.local/bin
+    mv ocicl /home/builder/.local/bin
 
 COPY init.lisp /home/builder/.roswell/init.lisp
 
-ENTRYPOINT "/home/builder/.local/bin/ros"
+ENTRYPOINT ["/home/builder/.local/bin/ros"]
 CMD ["run"]
