@@ -48,4 +48,4 @@ jobs:
             ROSWELL_VERSION=${{ inputs.roswell_version || 'master' }}
             SBCL_VERSION=${{ inputs.sbcl_version || '2.4.11' }}
             OCICL_VERSION=${{ inputs.ocicl_version || 'main'}}
-          tags: djhaskin987/roswell-sbcl-ocicl:latest
+          tags: djhaskin987/roswell-sbcl-ocicl:${{ inputs.roswell_version || 'master' }}-${{ inputs.sbcl_version || '2.4.11' }}-${{ inputs.ocicl_version || 'main' }},djhaskin987/roswell-sbcl-ocicl:latest
