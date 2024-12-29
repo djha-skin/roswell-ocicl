@@ -7,6 +7,7 @@ ARG SBCL_VERSION
 RUN dnf install -y gcc \
                g++ \
                rlwrap \
+               rsync \
                automake \
                git \
                sbcl \
