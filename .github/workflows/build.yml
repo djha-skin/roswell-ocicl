@@ -45,7 +45,7 @@ jobs:
         with:
           push: true
           build-args: |
-            ROSWELL_VERSION=${{ inputs.roswell_version }}
-            SBCL_VERSION=${{ inputs.sbcl_version }}
-            OCICL_VERSION=${{ inputs.ocicl_version }}
+            ROSWELL_VERSION=${{ inputs.roswell_version || 'master' }}
+            SBCL_VERSION=${{ inputs.sbcl_version || '2.4.11' }}
+            OCICL_VERSION=${{ inputs.ocicl_version || 'main'}}
           tags: djhaskin987/roswell-sbcl-ocicl:latest
