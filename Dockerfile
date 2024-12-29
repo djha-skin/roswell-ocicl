@@ -17,6 +17,7 @@ RUN dnf install -y gcc \
                texlive-mdwtools \
                pandoc \
                texlive-collection-fontsextra \
+               xmlstarlet \
                jq \
                texlive-latex && \
                dnf clean all
